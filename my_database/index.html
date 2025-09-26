@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我的数据库</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        pre { background: #f0f0f0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>数据加载中...</h1>
+    <script>
+    // 超简单加载方案
+    fetch('stroke_library.json')
+        .then(r => {
+            if(!r.ok) throw new Error('文件不存在');
+            return r.json();
+        })
+        .then(data => {
+            document.body.innerHTML = `
+                <h1>加载成功！</h1>
+                <p>共 ${Object.keys(data.strokes).length} 种笔画类型</p>
+                <button onclick="showRaw()">显示数据</button>
+                <pre id="data" style="display:none"></pre>
+            `;
+            document.getElementById('data').textContent = 
+                JSON.stringify(data, null, 2);
+        })
+        .catch(e => {
+            document.body.innerHTML = `
+                <h1 style="color:red">加载失败</h1>
+                <p>${e.message}</p>
+                <p>请检查：</p>
+                <ul>
+                    <li>文件是否命名为 stroke_library.json</li>
+                    <li>是否与index.html同目录</li>
+                </ul>
+            `;
+        });
+
+    function showRaw() {
+        document.getElementById('data').style.display = 'block';
+    }
+    </script>
+</body>
+</html>
